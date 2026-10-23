@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广州市南武中学2026年陈彦健康体育节校本部图片直播</title>
+<meta name="description" content="广州市南武中学2026年陈彦健康体育节校本部图片直播">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
+<style>
+  :root{
+    --red:#e8341c; --orange:#ff7a2f; --gold:#ffc53d;
+    --blue:#0b57d0; --deep:#0a1b3d; --ink:#12203a;
+    --bg:#f4f6fb; --card:#ffffff; --line:#e6eaf2;
+    --shadow:0 8px 24px rgba(12,28,60,.10);
+    --thumb-bg:#0e1626;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; height:100%;}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg); color:var(--ink); overflow-x:hidden;
+  }
+  .page{display:none; min-height:100vh;}
+  .page.active{display:block;}
+
+  /* ================= 封面页 ================= */
+  #cover{
+    position:relative; min-height:100vh; overflow:hidden;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #fff6e0 0%, rgba(255,246,224,0) 60%),
+      linear-gradient(160deg,#0a1b3d 0%,#123a7a 45%,#e8341c 130%);
+    color:#fff;
+  }
+  #cover::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(circle at 12% 22%, rgba(255,197,61,.35), transparent 38%),
+      radial-gradient(circle at 88% 18%, rgba(255,122,47,.35), transparent 40%),
+      radial-gradient(circle at 70% 82%, rgba(11,87,208,.45), transparent 45%);
+  }
+  .track{
+    position:absolute; left:-10%; right:-10%; bottom:-6%; height:36vh;
+    border-radius:50% 50% 0 0 / 60% 60% 0 0;
+    background:repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 42px, rgba(255,255,255,.03) 42px 84px);
+    border-top:3px dashed rgba(255,255,255,.35); pointer-events:none;
+  }
+  .cover-inner{position:relative; z-index:2; min-height:100vh; display:flex; flex-direction:column; padding:5vh 20px 6vh;}
+  /* 标题正上方居中 */
+  .cover-title{width:100%; text-align:center;}
+  .cover-badge{
+    display:inline-flex; align-items:center; gap:8px; padding:6px 16px; border-radius:999px;
+    margin-bottom:18px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+    font-size:13px; letter-spacing:3px; backdrop-filter:blur(6px);
+  }
+  .dot{width:8px; height:8px; border-radius:50%; background:#ff4d4f; animation:pulse 1.6s infinite;}
+  @keyframes pulse{70%{box-shadow:0 0 0 12px rgba(255,77,79,0);} 100%{box-shadow:0 0 0 0 rgba(255,77,79,0);}}
+  .cover-title h1{
+    margin:0 auto; max-width:1100px; font-size:clamp(21px,4.2vw,44px); line-height:1.35;
+    font-weight:800; letter-spacing:1px; text-shadow:0 4px 18px rgba(0,0,0,.35);
+  }
+  .cover-title .sub{
+    margin:16px auto 0; max-width:760px; font-size:clamp(12px,1.6vw,17px);
+    color:rgba(255,255,255,.85); line-height:1.8;
+  }
+  .cover-mid{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;}
+  .enter-btn{
+    position:relative; padding:18px 62px; font-size:clamp(17px,2.2vw,22px); font-weight:700; letter-spacing:4px;
+    color:#fff; border:none; border-radius:999px; cursor:pointer;
+    background:linear-gradient(135deg,#ff7a2f,#e8341c 55%,#c1121f);
+    box-shadow:0 14px 34px rgba(232,52,28,.45), inset 0 1px 0 rgba(255,255,255,.35);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .enter-btn:hover{transform:translateY(-3px); box-shadow:0 18px 40px rgba(232,52,28,.55);}
+  .enter-btn:active{transform:translateY(1px) scale(.99);}
+  .enter-btn::after{
+    content:""; position:absolute; inset:-6px; border-radius:999px;
+    border:2px solid rgba(255,255,255,.45); animation:ring 2.4s ease-out infinite; pointer-events:none;
+  }
+  @keyframes ring{0%{transform:scale(.96); opacity:.9;} 100%{transform:scale(1.12); opacity:0;}}
+  .enter-tip{font-size:13px; color:rgba(255,255,255,.72); letter-spacing:1px;}
+  .cover-foot{text-align:center; font-size:12px; color:rgba(255,255,255,.6); line-height:1.9; padding-top:10px;}
+
+  /* ================= 密码弹窗 ================= */
+  .mask{
+    position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
+    background:rgba(6,14,32,.62); backdrop-filter:blur(8px); padding:20px;
+  }
+  .mask.show{display:flex;}
+  .lock-box{
+    width:min(420px,100%); background:#fff; border-radius:20px; padding:34px 28px 26px;
+    box-shadow:0 24px 60px rgba(0,0,0,.35); text-align:center; animation:pop .22s ease;
+  }
+  @keyframes pop{from{transform:scale(.94); opacity:0;} to{transform:scale(1); opacity:1;}}
+  .lock-box.shake{animation:shake .38s;}
+  @keyframes shake{0%,100%{transform:translateX(0);} 20%{transform:translateX(-9px);} 40%{transform:translateX(9px);} 60%{transform:translateX(-6px);} 80%{transform:translateX(6px);}}
+  .lock-icon{font-size:34px; line-height:1;}
+  .lock-box h3{margin:12px 0 6px; font-size:19px;}
+  .lock-box p{margin:0 0 18px; font-size:13px; color:#6b7793;}
+  .lock-box input{
+    width:100%; padding:14px 16px; font-size:16px; text-align:center; letter-spacing:2px;
+    border:1.5px solid var(--line); border-radius:12px; outline:none; transition:border-color .2s;
+  }
+  .lock-box input:focus{border-color:var(--orange); box-shadow:0 0 0 4px rgba(255,122,47,.14);}
+  .lock-btns{display:flex; gap:12px; margin-top:16px;}
+  .btn{
+    padding:13px 22px; font-size:15px; font-weight:600; border-radius:12px; cursor:pointer;
+    border:1px solid var(--line); background:#f6f8fc; color:#55617a; transition:.18s; flex:1;
+  }
+  .btn:hover{background:#eef2f9;}
+  .btn.primary{border:none; background:linear-gradient(135deg,#ff7a2f,#e8341c); color:#fff;}
+  .btn.primary:hover{filter:brightness(1.06);}
+  .lock-err{margin-top:12px; min-height:18px; font-size:13px; color:#e8341c;}
+
+  /* ================= 直播页 ================= */
+  #live{background:var(--bg); padding-bottom:64px;}
+  .live-head{
+    position:sticky; top:0; z-index:30; color:#fff; padding:12px 16px;
+    background:linear-gradient(135deg,#0a1b3d,#123a7a 60%,#e8341c 160%);
+    box-shadow:0 4px 18px rgba(10,27,61,.28);
+  }
+  .head-row{display:flex; align-items:center; gap:10px; max-width:1400px; margin:0 auto;}
+  .head-title{flex:1; min-width:0; text-align:center;}
+  .head-title .t{
+    font-size:clamp(13px,1.7vw,18px); font-weight:700; letter-spacing:.5px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .head-title .m{margin-top:4px; font-size:12px; color:rgba(255,255,255,.78);}
+  .head-title .m b{color:var(--gold); font-size:14px;}
+  .icon-btn{
+    flex:0 0 auto; height:38px; min-width:38px; padding:0 12px; border-radius:10px; cursor:pointer;
+    border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.14); color:#fff;
+    font-size:14px; display:inline-flex; align-items:center; gap:6px; transition:.18s;
+  }
+  .icon-btn:hover{background:rgba(255,255,255,.26);}
+  .icon-btn.on{background:var(--gold); color:#3a2600; border-color:var(--gold); font-weight:700;}
+  .icon-btn.spin svg{animation:spin .9s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .grid{max-width:1400px; margin:14px auto 0; padding:0 12px; display:flex; gap:12px; align-items:flex-start;}
+  .col{flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:12px;}
+
+  /* 16:9 固定显示框，照片自适应框内 */
+  .card{
+    position:relative; background:var(--card); border-radius:14px; overflow:hidden;
+    box-shadow:var(--shadow); cursor:zoom-in; animation:fade .32s ease both; margin:0;
+  }
+  @keyframes fade{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;}}
+  .thumb{
+    position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; background:var(--thumb-bg);
+  }
+  .thumb .blur{
+    position:absolute; inset:-8%; background-size:cover; background-position:center;
+    filter:blur(22px) brightness(.72) saturate(1.2); transform:scale(1.12); opacity:.9;
+  }
+  .thumb img{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:contain; display:block; background:transparent;
+  }
+  .card .meta{
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+    padding:8px 12px; font-size:12px; color:#7b869c;
+  }
+  .card .meta .nm{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .card .meta .tm{flex:0 0 auto; font-variant-numeric:tabular-nums;}
+  .card .new{
+    position:absolute; top:10px; left:10px; padding:4px 10px; border-radius:999px; z-index:2;
+    background:linear-gradient(135deg,#ff7a2f,#e8341c); color:#fff; font-size:11px; font-weight:700;
+    box-shadow:0 4px 12px rgba(232,52,28,.4); letter-spacing:1px;
+  }
+  .card.is-new{box-shadow:0 8px 26px rgba(232,52,28,.35), 0 0 0 2px var(--gold);}
+  .card .no{
+    position:absolute; top:10px; right:10px; z-index:2; padding:3px 9px; border-radius:999px;
+    background:rgba(10,20,40,.55); color:#fff; font-size:11px; backdrop-filter:blur(4px);
+  }
+
+  .empty{
+    max-width:660px; margin:10vh auto; padding:32px 26px; text-align:center;
+    background:#fff; border-radius:18px; box-shadow:var(--shadow);
+  }
+  .empty h3{margin:0 0 10px; font-size:18px;}
+  .empty p{margin:8px 0; font-size:14px; color:#6b7793; line-height:1.9;}
+  .empty code{display:inline-block; padding:2px 8px; border-radius:6px; background:#f0f3f9; color:#0b57d0; font-size:13px;}
+  .empty .btn{margin-top:16px; display:inline-block; flex:0 0 auto;}
+
+  /* 灯箱：单击查看大图 */
+  .lb{position:fixed; inset:0; z-index:80; display:none; background:rgba(4,8,18,.95); align-items:center; justify-content:center;}
+  .lb.show{display:flex;}
+  .lb .stage{position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center;}
+  .lb img{max-width:92vw; max-height:82vh; object-fit:contain; border-radius:6px; box-shadow:0 20px 60px rgba(0,0,0,.6);}
+  .lb .close,.lb .nav{
+    position:absolute; color:#fff; background:rgba(255,255,255,.16); border:none; cursor:pointer;
+    width:46px; height:46px; border-radius:50%; font-size:22px; line-height:1; z-index:2;
+  }
+  .lb .close:hover,.lb .nav:hover{background:rgba(255,255,255,.32);}
+  .lb .close{top:18px; right:18px;}
+  .lb .nav.prev{left:16px; top:50%; transform:translateY(-50%);}
+  .lb .nav.next{right:16px; top:50%; transform:translateY(-50%);}
+  .lb .cap{
+    position:absolute; bottom:18px; left:0; right:0; text-align:center;
+    color:rgba(255,255,255,.82); font-size:13px; padding:0 20px;
+  }
+  .lb .loading{position:absolute; color:rgba(255,255,255,.7); font-size:14px;}
+
+  .fab{
+    position:fixed; right:16px; bottom:18px; z-index:40; width:46px; height:46px; border-radius:50%;
+    border:none; cursor:pointer; background:rgba(10,27,61,.86); color:#fff; font-size:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,.28); display:none;
+  }
+  .fab.show{display:block;}
+  .toast{
+    position:fixed; left:50%; bottom:80px; transform:translateX(-50%) translateY(20px); z-index:90;
+    padding:11px 20px; border-radius:999px; background:rgba(10,27,61,.92); color:#fff; font-size:14px;
+    opacity:0; pointer-events:none; transition:.25s;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .pull{
+    position:fixed; top:0; left:0; right:0; z-index:25; text-align:center; color:#fff;
+    font-size:13px; padding:8px 0; background:var(--blue); transform:translateY(-100%); transition:transform .25s;
+  }
+  .pull.show{transform:translateY(0);}
+  @media (max-width:520px){
+    .head-title .t{font-size:13px;}
+    .icon-btn span{display:none;}
+    .grid{gap:8px; padding:0 8px;}
+    .col{gap:8px;}
+    .lb .nav{width:40px; height:40px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 封面页 ================= -->
+<section id="cover" class="page active">
+  <div class="track"></div>
+  <div class="cover-inner">
+    <div class="cover-title">
+      <div class="cover-badge"><span class="dot"></span> LIVE 图片直播</div>
+      <h1>广州市南武中学2026年陈彦健康体育节校本部图片直播</h1>
+      <div class="sub">赛场精彩瞬间 · 实时同步更新 · 按拍摄时间倒序呈现</div>
+    </div>
+    <div class="cover-mid">
+      <button class="enter-btn" id="enterBtn">进入直播</button>
+      <div class="enter-tip">进入需输入直播密码</div>
+    </div>
+    <div class="cover-foot">
+      图片来源：仓库 pic 文件夹 &nbsp;|&nbsp; 点「刷新」或按 R 键获取最新照片<br>
+      建议使用 Chrome / Edge 浏览器访问
+    </div>
+  </div>
+</section>
+
+<!-- ================= 密码弹窗 ================= -->
+<div class="mask" id="lockMask">
+  <div class="lock-box" id="lockBox">
+    <div class="lock-icon">🔒</div>
+    <h3>请输入直播密码</h3>
+    <p>由组委会统一发布，观看后请勿随意外传</p>
+    <input type="password" id="pwdInput" placeholder="请输入密码" autocomplete="off">
+    <div class="lock-btns">
+      <button class="btn" id="pwdCancel">取消</button>
+      <button class="btn primary" id="pwdOk">确认进入</button>
+    </div>
+    <div class="lock-err" id="pwdErr"></div>
+  </div>
+</div>
+
+<!-- ================= 直播页 ================= -->
+<section id="live" class="page">
+  <div class="live-head">
+    <div class="head-row">
+      <button class="icon-btn" id="backBtn" title="返回封面">◀<span> 返回</span></button>
+      <div class="head-title">
+        <div class="t">广州市南武中学2026年陈彦健康体育节校本部图片直播</div>
+        <div class="m">共 <b id="count">0</b> 张 · 更新于 <span id="scanTime">--</span> <span id="delta"></span></div>
+      </div>
+      <button class="icon-btn" id="autoBtn" title="自动刷新">⚡<span> 自动</span></button>
+      <button class="icon-btn" id="refreshBtn" title="刷新（或按 R / F5）">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/>
+        </svg><span> 刷新</span>
+      </button>
+    </div>
+  </div>
+  <div class="pull" id="pullTip">下拉刷新中…</div>
+  <div class="grid" id="grid">
+    <div class="col" id="colL"></div>
+    <div class="col" id="colR"></div>
+  </div>
+  <div id="emptyBox"></div>
+</section>
+
+<button class="fab" id="topBtn">↑</button>
+<div class="toast" id="toast"></div>
+
+<!-- 灯箱 -->
+<div class="lb" id="lb">
+  <div class="stage">
+    <button class="close" id="lbClose">✕</button>
+    <button class="nav prev" id="lbPrev">‹</button>
+    <button class="nav next" id="lbNext">›</button>
+    <div class="loading" id="lbLoading">加载中…</div>
+    <img id="lbImg" alt="">
+    <div class="cap" id="lbCap"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ================== 配置 ================== */
+  var CONFIG = {
+    // 密码：页面源码是公开的，所以这里只存 SHA-256 值（明文为 nanwuXYH2026）
+    // 想改密码：把下面明文改掉，再把 passwordHash 换成新密码的 SHA-256（小写 64 位十六进制）
+    password: "nanwuXYH2026",
+    passwordHash: "4fcb28b08cb8d2582d52634adb009b5732e4877e7b99818f2a7743d9aad205d1",
+
+    manifest: "manifest.json",   // GitHub Actions 自动生成（仓库根目录）
+    api: "api/photos",           // 本地预览用（server.py）
+    order: "desc",               // desc = 最新照片在最上面；asc 则最早的最上面
+    fit: "contain",              // contain = 完整显示照片（默认，留白处用同色模糊填充）；cover = 裁切填满 16:9
+    aspect: "16 / 9",            // 显示框比例
+    autoInterval: 60000,         // 自动刷新间隔（毫秒），GitHub Pages 建议 60 秒
+    ext: /\.(jpe?g|png|gif|webp|bmp|avif|jfif|heic)$/i
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  function showPage(id) {
+    ["cover", "live"].forEach(function (p) { $(p).classList.toggle("active", p === id); });
+    $("topBtn").classList.remove("show");
+    window.scrollTo(0, 0);
+  }
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2000);
+  }
+  function fmt(d) {
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " +
+           p(d.getHours()) + ":" + p(d.getMinutes()) + ":" + p(d.getSeconds());
+  }
+
+  /* ================== 密码校验（优先用哈希比对） ================== */
+  async function sha256(str) {
+    if (window.crypto && crypto.subtle && crypto.subtle.digest) {
+      var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+        return ("0" + b.toString(16)).slice(-2);
+      }).join("");
+    }
+    return null;
+  }
+
+  var unlocked = false;
+  try { unlocked = sessionStorage.getItem("nw_unlocked") === "1"; } catch (e) {}
+
+  function enterLive() {
+    unlocked = true;
+    try { sessionStorage.setItem("nw_unlocked", "1"); } catch (e) {}
+    showPage("live");
+    refresh(true);
+  }
+  function askPassword() {
+    $("lockMask").classList.add("show");
+    var inp = $("pwdInput");
+    inp.value = "";
+    $("pwdErr").textContent = "";
+    setTimeout(function () { inp.focus(); }, 80);
+  }
+  function closeLock() { $("lockMask").classList.remove("show"); }
+  function rejectPwd(msg) {
+    $("pwdErr").textContent = msg || "密码不正确，请重新输入";
+    var box = $("lockBox");
+    box.classList.remove("shake");
+    void box.offsetWidth;
+    box.classList.add("shake");
+    $("pwdInput").select();
+  }
+  async function checkPwd() {
+    var v = $("pwdInput").value.trim();
+    if (!v) { rejectPwd("请输入密码"); return; }
+    var h = await sha256(v);
+    var ok = h ? (h === CONFIG.passwordHash) : (v === CONFIG.password);
+    if (ok) {
+      closeLock();
+      enterLive();
+      toast("欢迎观看体育节图片直播");
+    } else {
+      rejectPwd();
+    }
+  }
+  $("enterBtn").addEventListener("click", function () {
+    if (unlocked) { enterLive(); } else { askPassword(); }
+  });
+  $("pwdOk").addEventListener("click", checkPwd);
+  $("pwdCancel").addEventListener("click", closeLock);
+  $("pwdInput").addEventListener("keydown", function (e) { if (e.key === "Enter") checkPwd(); });
+  $("lockMask").addEventListener("click", function (e) { if (e.target === $("lockMask")) closeLock(); });
+  $("backBtn").addEventListener("click", function () { showPage("cover"); });
+
+  /* ================== 图片源：自动探测，无需手动选择文件夹 ==================
+     1) 本地预览（server.py）      -> api/photos
+     2) GitHub Pages 静态托管      -> manifest.json（Actions 自动生成）
+     3) 兜底：GitHub API 直读仓库  -> api.github.com/repos/.../contents/pic
+  ------------------------------------------------------------------------ */
+  var source = "auto";
+
+  function normalize(arr, base) {
+    return arr.map(function (p) {
+      var url = p.url || p.download_url || ((base || "pic/") + encodeURIComponent(p.name));
+      return {
+        key: p.path || p.name || url,
+        name: p.name || String(url).split("/").pop(),
+        url: url,
+        mtime: Number(p.mtime || 0),
+        time: p.time || (p.mtime ? fmt(new Date(Number(p.mtime) * 1000)) : ""),
+        width: Number(p.width || 0),
+        height: Number(p.height || 0)
+      };
+    }).filter(function (p) { return CONFIG.ext.test(p.name); });
+  }
+
+  async function tryApi() {
+    var r = await fetch(CONFIG.api + "?t=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) return null;
+    var j = await r.json();
+    if (!j || !Array.isArray(j.photos)) return null;
+    source = "api";
+    return normalize(j.photos, "pic/");
+  }
+  async function tryManifest() {
+    var r = await fetch(CONFIG.manifest + "?t=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) return null;
+    var j = await r.json();
+    var arr = Array.isArray(j) ? j : (j.photos || []);
+    if (!arr.length) return null;
+    source = "manifest";
+    return normalize(arr, "pic/");
+  }
+  async function tryGithubApi() {
+    // 从 GitHub Pages 网址自动推断 owner / repo，无需手工配置
+    var host = location.hostname, seg = location.pathname.split("/").filter(Boolean);
+    var owner = null, repo = null;
+    if (/\.github\.io$/i.test(host)) {
+      owner = host.split(".")[0];
+      repo = seg.length ? seg[0] : null;
+    }
+    if (!owner || !repo) return null;
+    var url = "https://api.github.com/repos/" + owner + "/" + repo + "/contents/pic?ref=main&t=" + Date.now();
+    var r = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+    if (!r.ok) {
+      r = await fetch(url.replace("ref=main", "ref=master"), { headers: { Accept: "application/vnd.github+json" } });
+      if (!r.ok) return null;
+    }
+    var j = await r.json();
+    if (!Array.isArray(j)) return null;
+    source = "github-api";
+    var out = j.map(function (it) {
+      return { name: it.name, url: "pic/" + encodeURIComponent(it.name), mtime: 0, time: "" };
+    });
+    return normalize(out, "pic/");
+  }
+
+  async function loadPhotos() {
+    var steps = [tryApi, tryManifest, tryGithubApi];
+    for (var i = 0; i < steps.length; i++) {
+      try {
+        var res = await steps[i]();
+        if (res && res.length) return res;
+      } catch (e) {}
+    }
+    return null;
+  }
+
+  /* ================== 渲染：左右两列 + 16:9 显示框 ================== */
+  var known = Object.create(null);
+  var cardCache = Object.create(null);
+  var current = [];
+  var firstLoad = true;
+  var loading = false;
+
+  function buildCard(p) {
+    var card = document.createElement("figure");
+    card.className = "card";
+
+    var thumb = document.createElement("div");
+    thumb.className = "thumb";
+    thumb.style.aspectRatio = CONFIG.aspect;
+
+    if (CONFIG.fit === "contain") {
+      var blur = document.createElement("div");
+      blur.className = "blur";
+      blur.style.backgroundImage = "url('" + p.url + "')";
+      thumb.appendChild(blur);
+    }
+
+    var img = document.createElement("img");
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.alt = p.name;
+    img.src = p.url;
+    img.style.objectFit = CONFIG.fit;
+    thumb.appendChild(img);
+
+    var meta = document.createElement("figcaption");
+    meta.className = "meta";
+    var nm = document.createElement("span");
+    nm.className = "nm";
+    nm.textContent = p.name;
+    var tm = document.createElement("span");
+    tm.className = "tm";
+    tm.textContent = p.time || "";
+    meta.appendChild(nm);
+    meta.appendChild(tm);
+
+    card.appendChild(thumb);
+    card.appendChild(meta);
+    card.addEventListener("click", function () { openLb(p.key); });   // 单击看大图
+    return card;
+  }
+
+  function render(list) {
+    var added = 0;
+    list.forEach(function (p) {
+      p.isNew = !firstLoad && !known[p.key];
+      if (!known[p.key]) added++;
+      if (!cardCache[p.key]) cardCache[p.key] = buildCard(p);
+      var card = cardCache[p.key];
+      card.classList.toggle("is-new", !!p.isNew);
+      var badge = card.querySelector(".new");
+      if (p.isNew && !badge) {
+        badge = document.createElement("span");
+        badge.className = "new";
+        badge.textContent = "新";
+        card.appendChild(badge);
+      } else if (!p.isNew && badge) {
+        badge.remove();
+      }
+      var no = card.querySelector(".no");
+      if (!no) {
+        no = document.createElement("span");
+        no.className = "no";
+        card.appendChild(no);
+      }
+      no.textContent = "";   // 序号在 layout 时写入
+    });
+
+    // 清理已被删除的图片
+    var alive = Object.create(null);
+    list.forEach(function (p) { alive[p.key] = 1; });
+    Object.keys(cardCache).forEach(function (k) {
+      if (!alive[k]) { delete cardCache[k]; delete known[k]; }
+    });
+
+    current = list;
+    layout(list);
+
+    $("count").textContent = list.length;
+    $("scanTime").textContent = fmt(new Date());
+    $("delta").textContent = (added && !firstLoad) ? "（本次新增 " + added + " 张）" : "";
+    $("emptyBox").innerHTML = "";
+    firstLoad = false;
+    list.forEach(function (p) { known[p.key] = 1; });
+    return added;
+  }
+
+  // 两列：按时间顺序左右交替（16:9 等高，序号为 1,2 / 3,4 …）
+  function layout(list) {
+    var L = $("colL"), R = $("colR");
+    L.innerHTML = ""; R.innerHTML = "";
+    list.forEach(function (p, i) {
+      var card = cardCache[p.key];
+      if (!card) return;
+      var no = card.querySelector(".no");
+      if (no) no.textContent = "#" + (i + 1);
+      (i % 2 === 0 ? L : R).appendChild(card);
+    });
+  }
+
+  function showEmpty(msg) {
+    $("colL").innerHTML = ""; $("colR").innerHTML = "";
+    $("count").textContent = "0";
+    $("emptyBox").innerHTML =
+      '<div class="empty"><h3>暂未读取到图片</h3>' +
+      (msg ? '<p>' + msg + '</p>' : '') +
+      '<p>GitHub Pages 是静态托管，需要先生成图片清单：</p>' +
+      '<p>① 把照片放进仓库的 <code>pic</code> 文件夹并推送</p>' +
+      '<p>② 在仓库 <b>Actions</b> 页手动运行一次「更新图片清单」，或等推送自动触发</p>' +
+      '<p>③ 回到本页点「刷新」即可</p>' +
+      '<button class="btn primary" id="retryBtn">重新读取</button></div>';
+    var b = $("retryBtn");
+    if (b) b.addEventListener("click", function () { refresh(true); });
+  }
+
+  async function refresh(manual) {
+    if (loading) return;
+    loading = true;
+    $("refreshBtn").classList.add("spin");
+    try {
+      var list = await loadPhotos();
+      if (!list || !list.length) { showEmpty(); return; }
+      var dir = CONFIG.order === "asc" ? -1 : 1;   // desc(默认): 修改时间最新的排最上面
+      list.sort(function (a, b) {
+        if (b.mtime !== a.mtime) return (b.mtime - a.mtime) * dir;   // 按修改时间排列
+        return String(b.name).localeCompare(String(a.name)) * dir;
+      });
+      var added = render(list);
+      if (manual) toast(added ? "已更新，新增 " + added + " 张" : "已刷新，暂无新照片");
+    } catch (e) {
+      showEmpty("读取失败：" + (e && e.message ? e.message : e));
+    } finally {
+      loading = false;
+      $("refreshBtn").classList.remove("spin");
+    }
+  }
+
+  /* ================== 刷新交互 ================== */
+  $("refreshBtn").addEventListener("click", function () { refresh(true); });
+  document.addEventListener("keydown", function (e) {
+    if ($("lockMask").classList.contains("show") || $("lb").classList.contains("show")) return;
+    if (e.key === "r" || e.key === "R") { e.preventDefault(); refresh(true); }
+  });
+
+  var autoTimer = null, autoOn = true;
+  function setAuto(on) {
+    autoOn = on;
+    $("autoBtn").classList.toggle("on", on);
+    clearInterval(autoTimer);
+    if (on) autoTimer = setInterval(function () {
+      if ($("live").classList.contains("active") && !document.hidden) refresh(false);
+    }, CONFIG.autoInterval);
+  }
+  $("autoBtn").addEventListener("click", function () {
+    setAuto(!autoOn);
+    toast(autoOn ? "已开启自动刷新（每 " + (CONFIG.autoInterval / 1000) + " 秒）" : "已关闭自动刷新");
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && $("live").classList.contains("active")) refresh(false);
+  });
+
+  var startY = 0, pulling = false;
+  document.addEventListener("touchstart", function (e) {
+    if (window.scrollY <= 0) { startY = e.touches[0].clientY; pulling = true; }
+  }, { passive: true });
+  document.addEventListener("touchmove", function (e) {
+    if (pulling && window.scrollY <= 0 && e.touches[0].clientY - startY > 70) $("pullTip").classList.add("show");
+  }, { passive: true });
+  document.addEventListener("touchend", function () {
+    if ($("pullTip").classList.contains("show")) {
+      $("pullTip").classList.remove("show");
+      if ($("live").classList.contains("active")) refresh(true);
+    }
+    pulling = false;
+  });
+
+  /* ================== 灯箱（单击查看大图） ================== */
+  var lbIndex = 0;
+  function openLb(key) {
+    var i = current.findIndex(function (p) { return p.key === key; });
+    if (i < 0) return;
+    lbIndex = i;
+    showLb();
+    $("lb").classList.add("show");
+  }
+  function showLb() {
+    var p = current[lbIndex];
+    if (!p) return;
+    $("lbLoading").style.display = "block";
+    $("lbImg").style.visibility = "hidden";
+    var im = new Image();
+    im.onload = function () {
+      $("lbImg").src = p.url;
+      $("lbImg").style.visibility = "visible";
+      $("lbLoading").style.display = "none";
+    };
+    im.onerror = function () { $("lbLoading").textContent = "大图加载失败"; };
+    im.src = p.url;
+    $("lbCap").textContent = p.name + (p.time ? " · " + p.time : "") +
+                             "　(" + (lbIndex + 1) + "/" + current.length + ")";
+  }
+  function lbStep(d) {
+    if (!current.length) return;
+    lbIndex = (lbIndex + d + current.length) % current.length;
+    showLb();
+  }
+  $("lbClose").addEventListener("click", function () { $("lb").classList.remove("show"); });
+  $("lbPrev").addEventListener("click", function (e) { e.stopPropagation(); lbStep(-1); });
+  $("lbNext").addEventListener("click", function (e) { e.stopPropagation(); lbStep(1); });
+  $("lb").addEventListener("click", function (e) {
+    if (e.target.id === "lb" || e.target.className === "stage") $("lb").classList.remove("show");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!$("lb").classList.contains("show")) return;
+    if (e.key === "Escape") $("lb").classList.remove("show");
+    if (e.key === "ArrowLeft") lbStep(-1);
+    if (e.key === "ArrowRight") lbStep(1);
+  });
+
+  $("topBtn").addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+  window.addEventListener("scroll", function () {
+    $("topBtn").classList.toggle("show", $("live").classList.contains("active") && window.scrollY > 500);
+  });
+
+  /* ================== 启动 ================== */
+  setAuto(true);
+  if (unlocked) { showPage("live"); refresh(false); }
+})();
+</script>
+</body>
+</html>
