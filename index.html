@@ -251,6 +251,20 @@
     color:rgba(255,255,255,.82); font-size:13px; padding:0 20px;
   }
   .lb .loading{position:absolute; color:rgba(255,255,255,.7); font-size:14px;}
+  /* 下载按钮：右上角，关闭按钮左边 */
+  .lb .dl{
+    position:absolute; top:18px; right:76px; z-index:3;
+    height:46px; padding:0 16px; border-radius:23px; border:none; cursor:pointer;
+    display:inline-flex; align-items:center; gap:7px; color:#fff; font-size:14px; font-weight:600;
+    background:rgba(255,255,255,.16); transition:.18s; line-height:1;
+  }
+  .lb .dl:hover{background:rgba(255,255,255,.32);}
+  .lb .dl svg{flex:0 0 auto;}
+  .lb .dl.wait{opacity:.6; cursor:progress;}
+  @media (max-width:520px){
+    .lb .dl{height:40px; padding:0 13px; right:64px; top:16px; font-size:13px; border-radius:20px;}
+    .lb .dl span{display:inline;}
+  }
 
   .fab{
     position:fixed; right:16px; bottom:18px; z-index:40; width:46px; height:46px; border-radius:50%;
@@ -410,6 +424,11 @@
 <div class="lb" id="lb">
   <div class="stage">
     <button class="close" id="lbClose">✕</button>
+    <button class="dl" id="lbDl" title="下载这张照片">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/>
+      </svg><span>下载</span>
+    </button>
     <button class="nav prev" id="lbPrev">‹</button>
     <button class="nav next" id="lbNext">›</button>
     <div class="loading" id="lbLoading">加载中…</div>
@@ -440,13 +459,11 @@
     githubBranch: "main",        // GitHub 仓库的默认分支（备用源）
     // 是否允许在 Gitee 读不到时回落到 GitHub 旧仓库（关闭后只会显示 Gitee 的照片）
     githubFallback: false,
-    // 跨域代理：Gitee API 的跨域支持不稳定，直连报 CORS / Failed to fetch 时会自动改用下面的代理
-    // 固定代理（留空则只用公共代理）；%s 为占位符
+    // 跨域代理：默认全部关闭 —— 直连 Gitee API 能用就不要绕代理，代理是「慢」和「401」的主因。
+    // 只有浏览器控制台明确报 CORS / Failed to fetch 时，才在 corsProxy 里填一个可用的代理地址
+    // （%s 为占位符，例如 "https://api.allorigins.win/raw?url=%s"）。corsProxies 默认留空。
     corsProxy: "",
-    corsProxies: [
-      "https://api.allorigins.win/raw?url=%s",
-      "https://corsproxy.io/?url=%s"
-    ],
+    corsProxies: [],
     order: "desc",               // desc = 最新照片在最上面；asc 则最早的最上面
     fit: "contain",              // contain = 完整显示照片（默认，留白处用同色模糊填充）；cover = 裁切填满 16:9
     aspect: "16 / 9",            // 显示框比例
@@ -566,7 +583,8 @@
   var source = "auto";
   var SRC_LABEL = {
     "api": "本地接口", "gitee-api": "Gitee 仓库",
-    "github-api": "GitHub 旧仓库", "manifest": "清单文件", "auto": "未知"
+    "github-api": "GitHub 旧仓库", "manifest": "清单文件",
+    "cache": "上次缓存", "auto": "未知"
   };
   var diagnose = [];   // 记录每一步尝试的结果，读不到图时直接显示原因
   var ghDates = Object.create(null);   // 提交时间缓存，避免重复请求被限流
@@ -582,6 +600,45 @@
   } catch (e) {}
   function saveDates() {
     try { localStorage.setItem(DATES_KEY, JSON.stringify(ghDates)); } catch (e) {}
+  }
+
+  /* ---------- 配额保护 + 照片列表缓存 ----------
+     Gitee 匿名 API 是「按 IP」限流（约 60 次/小时）。学校/场馆里大家共用同一个出口 IP，
+     人一多配额瞬间就被打满，于是所有人都收到 403。为此做两层保护：
+     ① 收到 403 后记下时间，接下来 50 分钟内不再请求 Gitee API（直接走清单/缓存）；
+     ② 每次成功读取后把照片列表存起来，配额用完时至少还能看到上一次的照片，而不是空白。 */
+  var BLOCK_KEY = "nw_403_until";
+  var LIST_KEY = "nw_list_v1";
+  var BLOCK_MINUTES = 50;
+
+  function giteeBlockedUntil() {
+    try { return Number(localStorage.getItem(BLOCK_KEY) || 0); } catch (e) { return 0; }
+  }
+  function blockGitee() {
+    try {
+      localStorage.setItem(BLOCK_KEY, String(Date.now() + BLOCK_MINUTES * 60 * 1000));
+    } catch (e) {}
+  }
+  function unblockGitee() {
+    try { localStorage.removeItem(BLOCK_KEY); } catch (e) {}
+  }
+  function saveListCache(list) {
+    try {
+      localStorage.setItem(LIST_KEY, JSON.stringify({
+        at: Date.now(),
+        list: list.map(function (p) {
+          return { key: p.key, name: p.name, url: p.url, mtime: p.mtime,
+                   time: p.time, width: p.width, height: p.height };
+        })
+      }));
+    } catch (e) {}
+  }
+  function loadListCache() {
+    try {
+      var c = JSON.parse(localStorage.getItem(LIST_KEY) || "null");
+      if (c && Array.isArray(c.list) && c.list.length) return c;
+    } catch (e) {}
+    return null;
   }
 
   function normalize(arr, base) {
@@ -656,6 +713,9 @@
   var giteeChannel = "直连";       // 记录当前实际生效的通道，便于排查
   var giteeChannelLocked = false;  // 一旦某个通道成功就锁定，后续请求沿用
   var giteeRateLimited = false;    // 收到 403 后置位，省掉后续非必要请求
+  var dateJob = null;              // 待后台补拍照时间的任务（不阻塞首屏）
+  var giteeHttpFailed = false;     // 收到 401/403 等明确错误：后续接口不必再试
+  var cacheAt = 0;                 // 缓存列表的生成时间（用于顶栏提示）
 
   function proxyUrl(u, tpl) {
     return tpl.indexOf("%s") > -1 ? tpl.replace("%s", encodeURIComponent(u)) : tpl + encodeURIComponent(u);
@@ -667,8 +727,21 @@
     return out;
   }
 
+  // 带超时的 fetch：任何一个请求卡住都不会把「刷新」拖死
+  function fetchWithTimeout(url, headers, ms) {
+    if (window.AbortController) {
+      var ac = new AbortController();
+      var t = setTimeout(function () { ac.abort(); }, ms || 10000);
+      return fetch(url, Object.assign({ cache: "no-store", signal: ac.signal },
+                   headers ? { headers: headers } : {}))
+        .then(function (r) { clearTimeout(t); return r; },
+              function (e) { clearTimeout(t); throw e; });
+    }
+    return fetch(url, Object.assign({ cache: "no-store" }, headers ? { headers: headers } : {}));
+  }
+
   // 依次尝试各个通道，返回解析后的 JSON（代理可能返回 text/plain，故手动 parse）
-  async function giteeGetJSON(url, headers) {
+  async function giteeGetJSON(url, headers, timeout) {
     var chans = channelList();
     var order = [];
     if (giteeChannelLocked) {
@@ -679,12 +752,16 @@
     for (var i = 0; i < order.length; i++) {
       var target = order[i].url ? proxyUrl(url, order[i].url) : url;
       try {
-        var r = await fetch(target, Object.assign({ cache: "no-store" }, headers ? { headers: headers } : {}));
+        var r = await fetchWithTimeout(target, headers, timeout || 10000);
         if (!r.ok) {
-          last = "HTTP " + r.status;
-          // 403 = 被限流（匿名每小时 60 次）或私有仓库：记下来，后续不再发多余请求
-          if (r.status === 403) giteeRateLimited = true;
-          continue;
+          // HTTP 错误（401 / 403 / 404…）是服务端给的答复：换代理转发同一个地址
+          // 只会拿到一模一样的错误，白绕一圈还拖慢速度 —— 这里直接判定失败，不再试其他通道。
+          diagnose.push("Gitee API：HTTP " + r.status +
+            (r.status === 403 ? "（匿名配额用尽或仓库非公开）" : "") +
+            (r.status === 401 ? "（未授权：多为代理要求密钥，或仓库需登录）" : ""));
+          if (r.status === 403) { giteeRateLimited = true; blockGitee(); }
+          giteeHttpFailed = true;   // 服务端已明确拒绝，别再换接口/换通道白试
+          return null;
         }
         var txt = await r.text();
         var data;
@@ -698,7 +775,8 @@
         if (order[i].url) diagnose.push("Gitee API：直连被拦截，已改用" + order[i].name + "读取");
         return data;
       } catch (e) {
-        last = "Failed to fetch（跨域被拦截）";
+        // 网络层失败（CORS 被拦 / 断网 / 超时）才值得换通道重试
+        last = (e && e.name === "AbortError") ? "请求超时" : "Failed to fetch（跨域被拦截或网络不可达）";
       }
     }
     diagnose.push("Gitee API 请求失败：" + last +
@@ -714,11 +792,13 @@
 
   async function giteeListDir(owner, repo, branch) {
     var all = [];
+    if (giteeHttpFailed) return all;                 // 已被服务端拒绝，不再重试
     for (var page = 1; page <= 10; page++) {          // 最多 1000 个文件
       var url = GITEE + "/" + owner + "/" + repo + "/contents/pic" +
                 "?ref=" + encodeURIComponent(branch) +
                 "&page=" + page + "&per_page=100&t=" + Date.now();
       var data = await giteeGetJSON(url, GITEE_H);
+      if (data === null) { giteeHttpFailed = true; break; }   // 失败（HTTP 错误/超时/被拦）：不再换接口白试
       if (!Array.isArray(data) || !data.length) {
         if (page === 1 && data) diagnose.push("Gitee API：master 分支的 pic/ 为空或不存在");
         break;
@@ -727,6 +807,7 @@
       if (data.length < 100) break;
     }
     if (all.length) return all;
+    if (giteeHttpFailed) return all;                 // 401/403/超时时 trees 也是同样的结果，跳过
 
     // contents 接口不可用时，退到 git/trees 递归列表，再筛出 pic/ 下的文件
     var treeUrl = GITEE + "/" + owner + "/" + repo + "/git/trees/" +
@@ -773,18 +854,17 @@
     for (var b = 0; b < branches.length; b++) {
       var files = await giteeListDir(owner, repo, branches[b]);
       if (!files.length) continue;
-      // 只给缓存里没有时间的文件去查提交记录（缓存命中时这一步直接跳过，刷新只剩 1 个请求）
-      if (!quick && !giteeRateLimited) {
+      // 拍照时间不在这里等：先登记任务，等照片渲染完再后台补（见 refresh），
+      // 这样「点刷新」只需要 1 个请求就能出图，不会被提交记录查询拖住。
+      if (!giteeRateLimited) {
         var need = new Set();
         files.forEach(function (it) { if (ghDates[it.path] === undefined) need.add(it.path); });
-        if (need.size) {
-          try { await giteeCommitDates(owner, repo, branches[b], need); } catch (e) {}
-        }
+        if (need.size) dateJob = { owner: owner, repo: repo, branch: branches[b], need: need };
       }
       var out = files.map(function (it) {
         if (it.type === "dir" || it.type === "tree") return null;
         var ts = ghDates[it.path] || 0;
-        // 同源部署（Gitee Pages）时用相对路径：同一 CDN 直出，比 gitee.com/raw 快得多且无防盗链
+        // 同源部署时用相对路径：同一站点直出，比 gitee.com/raw 快且无防盗链
         var url = isSameOriginRepo()
           ? ("pic/" + encodeURIComponent(it.name))
           : (it.download_url || giteeRaw(owner, repo, branches[b], it.path));
@@ -884,12 +964,25 @@
     return null;
   }
 
-  async function loadPhotos(quick) {
+  async function loadPhotos(quick, manual) {
     diagnose = [];
-    // 本地优先走本地接口；线上优先走 Gitee API（实时），GitHub API 与清单作备用
-    srcOrder = [tryApi, function () { return tryGiteeApi(quick); }];
+    // 每次刷新都重新给一次机会（限流是暂时的），但失败后本次内不再重复请求
+    giteeHttpFailed = false;
+    giteeRateLimited = false;
+    // 手动点「刷新」时清除配额封禁，给用户一次重试的机会
+    if (manual) unblockGitee();
+
+    srcOrder = [tryApi];
+    var until = giteeBlockedUntil();
+    if (Date.now() < until) {
+      diagnose.push("Gitee API 配额刚用完，已暂时跳过（" +
+        Math.max(1, Math.ceil((until - Date.now()) / 60000)) + " 分钟后自动重试）");
+    } else {
+      srcOrder.push(function () { return tryGiteeApi(quick); });
+    }
     if (CONFIG.githubFallback) srcOrder.push(function () { return tryGithubApi(quick); });
     srcOrder.push(tryManifest);
+
     for (var i = 0; i < srcOrder.length; i++) {
       try {
         var res = await srcOrder[i]();
@@ -1012,7 +1105,8 @@
     $("scanTime").textContent = fmt(new Date());
     $("delta").textContent = (added && !firstLoad) ? "（本次新增 " + added + " 张）" : "";
     $("srcTag").textContent = "· 来源：" + SRC_LABEL[source] +
-      (source === "gitee-api" && giteeChannel !== "直连" ? "（" + giteeChannel + "）" : "");
+      (source === "gitee-api" && giteeChannel !== "直连" ? "（" + giteeChannel + "）" : "") +
+      (source === "cache" && cacheAt ? "（" + fmt(new Date(cacheAt)).slice(5) + "）" : "");
     $("emptyBox").innerHTML = "";
     firstLoad = false;
     list.forEach(function (p) { known[p.key] = 1; });
@@ -1044,13 +1138,52 @@
       '<p>请按顺序检查：</p>' +
       '<p>① 照片是否直接放在 Gitee 仓库的 <code>pic/</code> 下（照片格式需为 jpg / png / webp）</p>' +
       '<p>② Gitee 仓库是否为<b>公开</b>仓库，且默认分支与 <code>CONFIG.giteeBranch</code> 一致（当前为 master）</p>' +
-      '<p>③ Gitee 匿名 API 有频率限制（同一 IP 约每小时 60 次）；被限流时稍等片刻或点击「重新读取」</p>' +
-      '<p>④ 若记录里出现「跨域被拦截」：说明浏览器不允许直连 Gitee API，代码会自动改走公共代理；' +
-      '代理也不通时，请把本页部署到 Gitee Pages（与仓库同源）并在仓库根目录放一份 <code>manifest.json</code></p>' +
+      '<p>③ 出现 <b>HTTP 403</b>：匿名配额用尽。Gitee 是<b>按 IP</b> 限流（约 60 次/小时），' +
+      '校园网/场馆 Wi-Fi 下大家共用出口 IP，人一多就会打满 —— 此时最有效的办法是<b>改用清单文件</b>：' +
+      '在放 <code>index.html</code> 的同一目录上传一份 <code>manifest.json</code>（可用附带的 gen_manifest.py 生成），' +
+      '页面就会<b>完全不走 API</b>，也不会再被限流</p>' +
+      '<p>④ 若记录里出现「跨域被拦截」：说明浏览器不允许直连 Gitee API，' +
+      '可在 <code>CONFIG.corsProxy</code> 填一个可用的跨域代理地址</p>' +
       diag +
       '<button class="btn primary" id="retryBtn">重新读取</button></div>';
     var b = $("retryBtn");
     if (b) b.addEventListener("click", function () { refresh(true); });
+  }
+
+  // 统一排序规则：desc(默认) = 拍摄时间最新的排最上面
+  function sortList(list) {
+    var dir = CONFIG.order === "asc" ? -1 : 1;
+    list.sort(function (a, b) {
+      if (b.mtime !== a.mtime) return (b.mtime - a.mtime) * dir;
+      return String(b.name).localeCompare(String(a.name)) * dir;
+    });
+    return list;
+  }
+
+  /* 后台补拍照时间：把缓存里没有时间的文件去查一次提交记录。
+     查到后给对应卡片补上时间并重新排序，全程不影响首屏出图。 */
+  function runDateJob() {
+    var job = dateJob;
+    dateJob = null;
+    if (!job) return;
+    setTimeout(async function () {
+      try { await giteeCommitDates(job.owner, job.repo, job.branch, job.need); } catch (e) { return; }
+      if (!current.length) return;
+      var changed = false;
+      current.forEach(function (p) {
+        if (!p.mtime && ghDates[p.key] !== undefined) {
+          p.mtime = ghDates[p.key];
+          p.time = fmt(new Date(p.mtime * 1000));
+          var card = cardCache[p.key];
+          if (card) {
+            var tm = card.querySelector(".tm");
+            if (tm) tm.textContent = p.time;
+          }
+          changed = true;
+        }
+      });
+      if (changed) { sortList(current); layout(current); }
+    }, 200);
   }
 
   async function refresh(manual) {
@@ -1058,19 +1191,40 @@
     loading = true;
     $("refreshBtn").classList.add("spin");
     try {
-      var list = await loadPhotos(!manual);
-      if (!list || !list.length) { showEmpty(); return; }
+      var list = await loadPhotos(!manual, manual);
+      if (!list || !list.length) {
+        // 已经看过照片了，就别因为一次刷新失败把画面清空
+        if (current.length) {
+          toast("没拿到新数据，仍显示上一次的照片");
+          return;
+        }
+        // 配额用完/接口不通时，退到本机缓存的上一次列表，至少还能看
+        var c = loadListCache();
+        if (c) {
+          source = "cache";
+          cacheAt = c.at;
+          list = c.list;
+          diagnose.push("已改用本机缓存的照片列表（" + fmt(new Date(c.at)) + "）");
+        } else {
+          showEmpty();
+          return;
+        }
+      }
 
-      var dir = CONFIG.order === "asc" ? -1 : 1;   // desc(默认): 修改时间最新的排最上面
-      list.sort(function (a, b) {
-        if (b.mtime !== a.mtime) return (b.mtime - a.mtime) * dir;   // 按修改时间排列
-        return String(b.name).localeCompare(String(a.name)) * dir;
-      });
+      sortList(list);
 
       // 先出图：拿到列表立刻渲染，不让用户干等（照片是懒加载的，实际只下载可见的几张）
       var isFirst = firstLoad;   // render() 内部会把它置 false，先存下来
       var added = render(list);
-      if (manual) toast(added ? "已更新，新增 " + added + " 张" : "已刷新，暂无新照片");
+      if (source !== "cache") saveListCache(list);     // 成功读到就存一份，配额用完时可兜底
+      if (manual) {
+        toast(source === "cache"
+          ? "接口暂不可用，显示的是上次缓存的照片"
+          : (added ? "已更新，新增 " + added + " 张" : "已刷新，暂无新照片"));
+      }
+
+      // 拍照时间后台补，补到之后自动重排，不占用「点刷新」的等待时间
+      runDateJob();
 
       // 校验放到后台，只在首屏做一次；即便发现问题也是「渲染完之后」再换，不影响首屏速度
       if (isFirst) {
@@ -1097,10 +1251,7 @@
             if (va.ok || va.pending) {
               srcCursor = s;
               cardCache = Object.create(null);
-              alt.sort(function (a, b) {
-                if (b.mtime !== a.mtime) return (b.mtime - a.mtime) * dir;
-                return String(b.name).localeCompare(String(a.name)) * dir;
-              });
+              sortList(alt);
               render(alt);
               break;
             }
@@ -1217,6 +1368,52 @@
     lbIndex = (lbIndex + d + current.length) % current.length;
     showLb();
   }
+  /* ---------- 下载当前这张大图 ---------- */
+  var dlBusy = false;
+  function saveBlob(blob, name) {
+    var u = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = u; a.download = name;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { a.remove(); URL.revokeObjectURL(u); }, 4000);
+  }
+  async function downloadCurrent() {
+    if (dlBusy) return;
+    var p = current[lbIndex];
+    if (!p) return;
+    var name = p.name || ("photo_" + (lbIndex + 1) + ".jpg");
+    dlBusy = true;
+    $("lbDl").classList.add("wait");
+    toast("正在准备下载…");
+    try {
+      // 优先走 fetch：能拿到文件内容时，可直接存成文件（文件名也是我们指定的）
+      var r = await fetch(p.url, { mode: "cors", referrerPolicy: "no-referrer", cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      var blob = await r.blob();
+      saveBlob(blob, name);
+      toast("已保存：" + name);
+    } catch (e) {
+      // 跨域不允许读取文件内容：退到直接打开，交由浏览器/用户手动保存
+      try {
+        var a = document.createElement("a");
+        a.href = p.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.download = name;          // 同源时浏览器会直接下载；跨域时会被忽略，仅打开图片
+        document.body.appendChild(a); a.click(); a.remove();
+        toast("已在新标签页打开，可长按/右键保存");
+      } catch (e2) {
+        toast("下载失败，请长按图片手动保存");
+      }
+    } finally {
+      dlBusy = false;
+      $("lbDl").classList.remove("wait");
+    }
+  }
+  $("lbDl").addEventListener("click", function (e) { e.stopPropagation(); downloadCurrent(); });
+
   $("lbClose").addEventListener("click", function () { $("lb").classList.remove("show"); });
   $("lbPrev").addEventListener("click", function (e) { e.stopPropagation(); lbStep(-1); });
   $("lbNext").addEventListener("click", function (e) { e.stopPropagation(); lbStep(1); });
@@ -1228,6 +1425,9 @@
     if (e.key === "Escape") $("lb").classList.remove("show");
     if (e.key === "ArrowLeft") lbStep(-1);
     if (e.key === "ArrowRight") lbStep(1);
+    if (e.key === "d" || e.key === "D" || e.key === "s" || e.key === "S") {
+      e.preventDefault(); downloadCurrent();          // 大图界面按 D / S 也能下载
+    }
   });
 
   $("topBtn").addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
