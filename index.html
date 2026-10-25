@@ -467,10 +467,6 @@
     // （%s 为占位符，例如 "https://api.allorigins.win/raw?url=%s"）。corsProxies 默认留空。
     corsProxy: "",
     corsProxies: [],
-    // 下载专用：上面三条通道都拿不到图片内容时，才会借道这里把图片取成本地文件
-    downloadProxies: [
-      "https://api.allorigins.win/raw?url=%s"
-    ],
     order: "desc",               // desc = 最新照片在最上面；asc 则最早的最上面
     fit: "contain",              // contain = 完整显示照片（默认，留白处用同色模糊填充）；cover = 裁切填满 16:9
     aspect: "16 / 9",            // 显示框比例
@@ -729,13 +725,12 @@
     if (window.AbortController) {
       var ac = new AbortController();
       var t = setTimeout(function () { ac.abort(); }, ms || 10000);
-      return fetch(url, Object.assign({ cache: "no-store", signal: ac.signal,
-                   referrerPolicy: "no-referrer" }, headers ? { headers: headers } : {}))
+      return fetch(url, Object.assign({ cache: "no-store", signal: ac.signal },
+                   headers ? { headers: headers } : {}))
         .then(function (r) { clearTimeout(t); return r; },
               function (e) { clearTimeout(t); throw e; });
     }
-    return fetch(url, Object.assign({ cache: "no-store", referrerPolicy: "no-referrer" },
-                 headers ? { headers: headers } : {}));
+    return fetch(url, Object.assign({ cache: "no-store" }, headers ? { headers: headers } : {}));
   }
 
   // 依次尝试各个通道，返回解析后的 JSON（代理可能返回 text/plain，故手动 parse）
@@ -1365,12 +1360,8 @@
     lbIndex = (lbIndex + d + current.length) % current.length;
     showLb();
   }
-  /* ---------- 下载当前这张大图 ----------
-     目标：真正唤起浏览器下载（保存成文件，文件名就是照片原名），
-     而不是跳转/新开标签页看原图。为此必须先把图片内容拿到本地变成 Blob，
-     再用 blob: 链接 + a[download] 触发保存 —— blob 是同源的，下载一定生效。 */
+  /* ---------- 下载当前这张大图 ---------- */
   var dlBusy = false;
-
   function saveBlob(blob, name) {
     var u = URL.createObjectURL(blob);
     var a = document.createElement("a");
@@ -1378,75 +1369,8 @@
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
-    setTimeout(function () { a.remove(); URL.revokeObjectURL(u); }, 60000);
+    setTimeout(function () { a.remove(); URL.revokeObjectURL(u); }, 4000);
   }
-
-  // 通道 1：直接 fetch 图片（服务器允许跨域读取时最快，且是原文件、无二次压缩）
-  async function blobByFetch(url) {
-    var r = await fetchWithTimeout(url, null, 30000);
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    var b = await r.blob();
-    if (!b || b.size < 512) throw new Error("内容异常");
-    return b;
-  }
-
-  // 通道 2：canvas 转存。图片只要带 CORS 头就能用 crossOrigin 加载并导出，
-  // 即使 fetch 被限制也能拿到本地数据（代价是重新编码一次）
-  function blobByCanvas(url) {
-    return new Promise(function (resolve, reject) {
-      var im = new Image();
-      im.crossOrigin = "anonymous";
-      im.referrerPolicy = "no-referrer";
-      im.onload = function () {
-        try {
-          var w = im.naturalWidth, h = im.naturalHeight;
-          if (!w || !h) throw new Error("尺寸为 0");
-          var c = document.createElement("canvas");
-          c.width = w; c.height = h;
-          c.getContext("2d").drawImage(im, 0, 0);
-          var mime = /\.png($|\?)/i.test(url) ? "image/png" : "image/jpeg";
-          if (c.toBlob) {
-            c.toBlob(function (b) { b && b.size > 512 ? resolve(b) : reject(new Error("导出失败")); },
-                     mime, 0.92);
-          } else {
-            resolve(dataURLToBlob(c.toDataURL(mime, 0.92)));
-          }
-        } catch (e) { reject(e); }
-      };
-      im.onerror = function () { reject(new Error("canvas 加载失败")); };
-      im.src = url + (url.indexOf("?") > -1 ? "&" : "?") + "dl=" + Date.now();
-    });
-  }
-
-  function dataURLToBlob(dataUrl) {
-    var parts = dataUrl.split(",");
-    var bin = atob(parts[1]);
-    var arr = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-    return new Blob([arr], { type: /png/i.test(parts[0]) ? "image/png" : "image/jpeg" });
-  }
-
-  // 通道 3：经跨域代理取内容（代理会补上 CORS 头，从而能拿到 Blob）
-  async function blobByProxy(url) {
-    var list = (CONFIG.corsProxy ? [CONFIG.corsProxy] : [])
-      .concat(CONFIG.downloadProxies || []);
-    for (var i = 0; i < list.length; i++) {
-      try {
-        var r = await fetchWithTimeout(proxyUrl(url, list[i]), null, 45000);
-        if (!r.ok) continue;
-        var b = await r.blob();
-        if (b && b.size > 512) return b;
-      } catch (e) {}
-    }
-    return null;
-  }
-
-  async function getImageBlob(url) {
-    try { return await blobByFetch(url); } catch (e) {}
-    try { return await blobByCanvas(url); } catch (e) {}
-    return await blobByProxy(url);
-  }
-
   async function downloadCurrent() {
     if (dlBusy) return;
     var p = current[lbIndex];
@@ -1456,13 +1380,25 @@
     $("lbDl").classList.add("wait");
     toast("正在准备下载…");
     try {
-      var blob = await getImageBlob(p.url);
-      if (!blob) throw new Error("拿不到图片内容");
+      // 优先走 fetch：能拿到文件内容时，可直接存成文件（文件名也是我们指定的）
+      var r = await fetch(p.url, { mode: "cors", referrerPolicy: "no-referrer", cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      var blob = await r.blob();
       saveBlob(blob, name);
-      toast("已开始下载：" + name);
+      toast("已保存：" + name);
     } catch (e) {
-      // 三条通道都拿不到内容（极端情况）：不再跳转新标签页，直接引导长按保存
-      toast("无法直接保存，请长按图片保存到相册");
+      // 跨域不允许读取文件内容：退到直接打开，交由浏览器/用户手动保存
+      try {
+        var a = document.createElement("a");
+        a.href = p.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.download = name;          // 同源时浏览器会直接下载；跨域时会被忽略，仅打开图片
+        document.body.appendChild(a); a.click(); a.remove();
+        toast("已在新标签页打开，可长按/右键保存");
+      } catch (e2) {
+        toast("下载失败，请长按图片手动保存");
+      }
     } finally {
       dlBusy = false;
       $("lbDl").classList.remove("wait");
