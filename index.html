@@ -80,7 +80,6 @@
   }
   @keyframes ring{0%{transform:scale(.96); opacity:.9;} 100%{transform:scale(1.12); opacity:0;}}
   .enter-tip{font-size:13px; color:rgba(255,255,255,.72); letter-spacing:1px;}
-  .cover-foot{text-align:center; font-size:12px; color:rgba(255,255,255,.6); line-height:1.9; padding-top:10px;}
 
   /* ================= 密码弹窗 ================= */
   .mask{
@@ -113,7 +112,7 @@
   .btn.primary:hover{filter:brightness(1.06);}
   .lock-err{margin-top:12px; min-height:18px; font-size:13px; color:#e8341c;}
 
-  /* 技术支持弹窗 */
+  /* 联系开发者弹窗 */
   .support-mail{
     display:flex; align-items:center; gap:10px; margin:0 0 18px;
     padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; background:#f6f8fc;
@@ -262,8 +261,13 @@
   .lb .dl svg{flex:0 0 auto;}
   .lb .dl.wait{opacity:.6; cursor:progress;}
   @media (max-width:520px){
-    .lb .dl{height:40px; padding:0 13px; right:64px; top:16px; font-size:13px; border-radius:20px;}
+    .lb .dl{height:40px; padding:0 13px; right:70px; top:16px; font-size:13px; border-radius:20px;}
     .lb .dl span{display:inline;}
+  }
+  /* 超窄屏：文案较长，再收一档避免挤到左边缘 */
+  @media (max-width:360px){
+    .lb .dl{height:36px; padding:0 10px; right:70px; top:14px; font-size:12px; border-radius:18px; gap:5px;}
+    .lb .dl svg{width:14px; height:14px;}
   }
 
   .fab{
@@ -290,7 +294,7 @@
     .icon-btn{padding:0 9px;}
 
     /* 竖屏：第一行只留「返回 · 标题 · 刷新」，
-       「自动更新 + 技术支持」整体换到第二行，居中显示在「更新时间」下方 */
+       「自动更新 + 联系开发者」整体换到第二行，居中显示在「更新时间」下方 */
     .head-row{flex-wrap:wrap; row-gap:8px;}
     #backBtn{order:1;}
     .head-title{order:2;}
@@ -328,9 +332,6 @@
     <div class="cover-mid">
       <button class="enter-btn" id="enterBtn">进入直播</button>
       <div class="enter-tip">进入需输入直播密码</div>
-    </div>
-    <div class="cover-foot">
-      照片取自仓库 pic 文件夹 &nbsp;|&nbsp; 点「刷新」或按 R 键获取最新照片
     </div>
   </div>
 </section>
@@ -371,11 +372,11 @@
   </div>
 </div>
 
-<!-- 技术支持弹窗 -->
+<!-- 联系开发者弹窗 -->
 <div class="mask" id="supportMask">
   <div class="lock-box" id="supportBox">
     <div class="lock-icon">🛠</div>
-    <h3>技术支持</h3>
+    <h3>联系开发者</h3>
     <p>使用中遇到问题，可通过以下邮箱联系我们</p>
     <div class="support-mail">
       <a id="supportMail" href="mailto:hcc0927@yeah.net">hcc0927@yeah.net</a>
@@ -403,7 +404,7 @@
       <!-- 竖屏时会换到第二行居中显示 -->
       <div class="head-extra">
         <button class="icon-btn" id="autoBtn" title="自动更新（默认关闭，点击开启）">⚡<span> 自动更新</span></button>
-        <button class="icon-btn" id="supportBtn" title="技术支持">🛠<span> 技术支持</span></button>
+        <button class="icon-btn" id="supportBtn" title="联系开发者">🛠<span> 联系开发者</span></button>
       </div>
       <button class="icon-btn" id="refreshBtn" title="刷新（或按 R / F5）">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
@@ -427,10 +428,10 @@
 <div class="lb" id="lb">
   <div class="stage">
     <button class="close" id="lbClose">✕</button>
-    <button class="dl" id="lbDl" title="下载这张照片">
+    <button class="dl" id="lbDl" title="下载这张照片（手机请长按照片保存）">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/>
-      </svg><span>下载</span>
+      </svg><span>下载（手机请长按照片保存）</span>
     </button>
     <button class="nav prev" id="lbPrev">‹</button>
     <button class="nav next" id="lbNext">›</button>
@@ -1265,7 +1266,7 @@
     if (e.key === "r" || e.key === "R") { e.preventDefault(); refresh(true); }
   });
 
-  /* ================== 技术支持弹窗 ================== */
+  /* ================== 联系开发者弹窗 ================== */
   function openSupport() { $("supportMask").classList.add("show"); }
   function closeSupport() { $("supportMask").classList.remove("show"); }
 
@@ -1380,20 +1381,18 @@
     $("lbDl").classList.add("wait");
     toast("正在准备下载…");
     try {
-      // 优先走 fetch：能拿到文件内容时，可直接存成文件（文件名也是我们指定的）
       var r = await fetch(p.url, { mode: "cors", referrerPolicy: "no-referrer", cache: "no-store" });
       if (!r.ok) throw new Error("HTTP " + r.status);
       var blob = await r.blob();
       saveBlob(blob, name);
       toast("已保存：" + name);
     } catch (e) {
-      // 跨域不允许读取文件内容：退到直接打开，交由浏览器/用户手动保存
       try {
         var a = document.createElement("a");
         a.href = p.url;
         a.target = "_blank";
         a.rel = "noopener";
-        a.download = name;          // 同源时浏览器会直接下载；跨域时会被忽略，仅打开图片
+        a.download = name;
         document.body.appendChild(a); a.click(); a.remove();
         toast("已在新标签页打开，可长按/右键保存");
       } catch (e2) {
