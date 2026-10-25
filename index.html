@@ -316,7 +316,7 @@
 </head>
 <body>
 
-<!-- ================= 封面页 ================= -->
+<!-- 封面页 -->
 <section id="cover" class="page active">
   <div class="track"></div>
   <div class="cover-inner">
@@ -330,13 +330,12 @@
       <div class="enter-tip">进入需输入直播密码</div>
     </div>
     <div class="cover-foot">
-      图片来源：仓库 pic 文件夹 &nbsp;|&nbsp; 点「刷新」或按 R 键获取最新照片<br>
-      建议使用 Chrome / Edge 浏览器访问
+      照片取自仓库 pic 文件夹 &nbsp;|&nbsp; 点「刷新」或按 R 键获取最新照片
     </div>
   </div>
 </section>
 
-<!-- ================= 声明弹窗 ================= -->
+<!-- 声明弹窗 -->
 <div class="mask" id="declMask">
   <div class="lock-box decl-box" id="declBox">
     <h3 class="decl-title">声明</h3>
@@ -344,7 +343,7 @@
       <li>本站点由学生自主搭建运营，受网络条件限制（开发者在烧自己的流量上传照片流量）可能存在数据延迟，敬请谅解</li>
       <li>本站点内所有图片仅用作欣赏，严禁私自二创，不得用作商业用途等超出正常欣赏范畴的目的；</li>
       <li>本站点内的图片均包含版权信息，严禁将图片用于任何有可能侵犯摄影师著作权的用途，侵权必究；</li>
-      <li>如遇任何问题，请联系网站开发者：<a href="mailto:hcc0927@yeah.net">hcc0927@yeah.net</a>。</li>
+      <li>如遇任何问题，请联系网站开发者：<a href="mailto:hcc0927@yeah.net">hcc0927@yeah.net</a> 或 <a href="mailto:cclfelix@163.com">cclfelix@163.com</a>。</li>
     </ol>
     <label class="decl-check">
       <input type="checkbox" id="declAgree">
@@ -357,7 +356,7 @@
   </div>
 </div>
 
-<!-- ================= 密码弹窗 ================= -->
+<!-- 密码弹窗 -->
 <div class="mask" id="lockMask">
   <div class="lock-box" id="lockBox">
     <div class="lock-icon">🔒</div>
@@ -372,7 +371,7 @@
   </div>
 </div>
 
-<!-- ================= 技术支持弹窗 ================= -->
+<!-- 技术支持弹窗 -->
 <div class="mask" id="supportMask">
   <div class="lock-box" id="supportBox">
     <div class="lock-icon">🛠</div>
@@ -382,22 +381,26 @@
       <a id="supportMail" href="mailto:hcc0927@yeah.net">hcc0927@yeah.net</a>
       <button class="copy-btn" id="supportCopy" type="button">复制</button>
     </div>
+    <div class="support-mail">
+      <a id="supportMail2" href="mailto:cclfelix@163.com">cclfelix@163.com</a>
+      <button class="copy-btn" id="supportCopy2" type="button">复制</button>
+    </div>
     <div class="lock-btns">
       <button class="btn primary" id="supportClose">关闭</button>
     </div>
   </div>
 </div>
 
-<!-- ================= 直播页 ================= -->
+<!-- 直播页 -->
 <section id="live" class="page">
   <div class="live-head">
     <div class="head-row">
       <button class="icon-btn" id="backBtn" title="返回封面">◀<span> 返回</span></button>
       <div class="head-title">
         <div class="t">广州市南武中学2026年陈彦健康体育节校本部图片直播</div>
-        <div class="m">共 <b id="count">0</b> 张 · 更新于 <span id="scanTime">--</span> <span id="delta"></span> <span id="srcTag"></span></div>
+        <div class="m">共 <b id="count">0</b> 张 · 更新于 <span id="scanTime">--</span> <span id="delta"></span></div>
       </div>
-      <!-- 竖屏时这一组会整体换到第二行，居中显示在「更新时间」下方 -->
+      <!-- 竖屏时会换到第二行居中显示 -->
       <div class="head-extra">
         <button class="icon-btn" id="autoBtn" title="自动更新（默认关闭，点击开启）">⚡<span> 自动更新</span></button>
         <button class="icon-btn" id="supportBtn" title="技术支持">🛠<span> 技术支持</span></button>
@@ -450,7 +453,7 @@
 
     manifest: "manifest.json",   // 清单文件（仓库根目录，Actions/手工生成均可）
     api: "api/photos",           // 本地预览用（server.py）
-    // ===== 照片来源仓库：Gitee 为主，GitHub 为备用 =====
+    // ===== 照片仓库：Gitee 为主，GitHub 为备用 =====
     giteeOwner: "huangsongxi2008",
     giteeRepo: "nw-sport-meeting-live-photos",
     giteeBranch: "master",       // Gitee 仓库的默认分支
@@ -467,7 +470,7 @@
     order: "desc",               // desc = 最新照片在最上面；asc 则最早的最上面
     fit: "contain",              // contain = 完整显示照片（默认，留白处用同色模糊填充）；cover = 裁切填满 16:9
     aspect: "16 / 9",            // 显示框比例
-    autoInterval: 120000,        // 自动刷新间隔（毫秒）；GitHub API 未认证每小时限 60 次，不宜过密
+    autoInterval: 120000,        // 自动刷新间隔（毫秒）
     ext: /\.(jpe?g|png|gif|webp|bmp|avif|jfif|heic)$/i
   };
 
@@ -574,18 +577,8 @@
   $("lockMask").addEventListener("click", function (e) { if (e.target === $("lockMask")) closeLock(); });
   $("backBtn").addEventListener("click", function () { showPage("cover"); });
 
-  /* ================== 图片源：自动探测，无需手动选择文件夹 ==================
-     1) 本地预览（server.py）        -> api/photos
-     2) Gitee API 直读仓库 pic/      -> 主力数据源（https://gitee.com/api/v5）
-     3) GitHub API 直读仓库 pic/      -> Gitee 限流 / 跨域失败时的备用
-     4) 清单 manifest.json           -> 最后兜底
-  ------------------------------------------------------------------------ */
+  /* 图片源探测顺序：本地接口 → Gitee API → 清单文件（GitHub 旧仓库为可开关的备用） */
   var source = "auto";
-  var SRC_LABEL = {
-    "api": "本地接口", "gitee-api": "Gitee 仓库",
-    "github-api": "GitHub 旧仓库", "manifest": "清单文件",
-    "cache": "上次缓存", "auto": "未知"
-  };
   var diagnose = [];   // 记录每一步尝试的结果，读不到图时直接显示原因
   var ghDates = Object.create(null);   // 提交时间缓存，避免重复请求被限流
   var srcOrder = [];                   // 数据源尝试顺序
@@ -1104,9 +1097,6 @@
     $("count").textContent = list.length;
     $("scanTime").textContent = fmt(new Date());
     $("delta").textContent = (added && !firstLoad) ? "（本次新增 " + added + " 张）" : "";
-    $("srcTag").textContent = "· 来源：" + SRC_LABEL[source] +
-      (source === "gitee-api" && giteeChannel !== "直连" ? "（" + giteeChannel + "）" : "") +
-      (source === "cache" && cacheAt ? "（" + fmt(new Date(cacheAt)).slice(5) + "）" : "");
     $("emptyBox").innerHTML = "";
     firstLoad = false;
     list.forEach(function (p) { known[p.key] = 1; });
@@ -1276,7 +1266,6 @@
   });
 
   /* ================== 技术支持弹窗 ================== */
-  var SUPPORT_MAIL = "hcc0927@yeah.net";
   function openSupport() { $("supportMask").classList.add("show"); }
   function closeSupport() { $("supportMask").classList.remove("show"); }
 
@@ -1288,21 +1277,24 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && $("supportMask").classList.contains("show")) closeSupport();
   });
-  $("supportCopy").addEventListener("click", function () {
-    var done = function () { toast("邮箱已复制：" + SUPPORT_MAIL); };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(SUPPORT_MAIL).then(done, function () { fallbackCopy(); });
-    } else { fallbackCopy(); }
+
+  function copyText(text) {
+    var done = function () { toast("邮箱已复制：" + text); };
     function fallbackCopy() {
       var ta = document.createElement("textarea");
-      ta.value = SUPPORT_MAIL;
+      ta.value = text;
       ta.style.position = "fixed"; ta.style.opacity = "0";
       document.body.appendChild(ta); ta.select();
       try { document.execCommand("copy"); done(); }
       catch (e) { toast("复制失败，请长按选中邮箱手动复制"); }
       document.body.removeChild(ta);
     }
-  });
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallbackCopy);
+    } else { fallbackCopy(); }
+  }
+  $("supportCopy").addEventListener("click", function () { copyText("hcc0927@yeah.net"); });
+  $("supportCopy2").addEventListener("click", function () { copyText("cclfelix@163.com"); });
 
   var autoTimer = null, autoOn = false;   // 默认不自动刷新，需要时再点「自动」开启
   function setAuto(on) {
@@ -1315,7 +1307,7 @@
   }
   $("autoBtn").addEventListener("click", function () {
     setAuto(!autoOn);
-    toast(autoOn ? "已开启自动刷新（每 " + (CONFIG.autoInterval / 1000) + " 秒）" : "已关闭自动刷新");
+    toast(autoOn ? "已开启自动刷新（每 " + Math.round(CONFIG.autoInterval / 1000) + " 秒）" : "已关闭自动刷新");
   });
   document.addEventListener("visibilitychange", function () {
     // 默认不自动刷新：仅在手动开启「自动」后，切回页面才自动拉一次
