@@ -510,6 +510,7 @@
     passwordHash: "4fcb28b08cb8d2582d52634adb009b5732e4877e7b99818f2a7743d9aad205d1",
 
     manifest: "manifest.json",   
+    manifestFallbackUrl: "https://2008hsx.github.io/NwSportMeetingLivePhotos/manifest.json",
     api: "api/photos",           
     
     giteeOwner: "huangsongxi2008",
@@ -762,8 +763,10 @@
   
   async function tryManifest() {
     var paths = [CONFIG.manifest, "pic/manifest.json"];
+    if (CONFIG.manifestFallbackUrl) paths.push(CONFIG.manifestFallbackUrl);
     for (var i = 0; i < paths.length; i++) {
-      var res = await getJSON(paths[i] + "?t=" + Date.now());
+      var sep = paths[i].indexOf("?") > -1 ? "&" : "?";
+      var res = await getJSON(paths[i] + sep + "t=" + Date.now());
       if (!res.ok) { diagnose.push("清单 " + paths[i] + "：" + res.status + "（未生成）"); continue; }
       var arr = Array.isArray(res.data) ? res.data : (res.data.photos || []);
       if (!arr.length) { diagnose.push("清单 " + paths[i] + "：内容为空"); continue; }
