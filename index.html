@@ -104,9 +104,38 @@
   @keyframes pop{from{transform:scale(.94); opacity:0;} to{transform:scale(1); opacity:1;}}
   .lock-box.shake{animation:shake .38s;}
   @keyframes shake{0%,100%{transform:translateX(0);} 20%{transform:translateX(-9px);} 40%{transform:translateX(9px);} 60%{transform:translateX(-6px);} 80%{transform:translateX(6px);}}
+  #rawMask{align-items:flex-start; padding-top:max(6vh,24px);}
+  .lock-box.raw-box{
+    position:relative; width:min(520px,100%); max-height:82vh; overflow-y:auto;
+    padding:48px 28px 26px; text-align:left;
+    animation:dropIn .32s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes dropIn{from{transform:translateY(-80vh); opacity:0;} to{transform:translateY(0); opacity:1;}}
+  .raw-x{
+    position:absolute; top:12px; right:14px; width:32px; height:32px; border:none; border-radius:50%;
+    background:var(--mb2); color:#4A6B85; font-size:22px; line-height:1; cursor:pointer; transition:.18s;
+  }
+  .raw-x:hover{background:var(--mb3); color:var(--mb8); transform:rotate(90deg);}
+  .lock-box h3.raw-title{
+    margin:0 0 18px; font-size:19px; text-align:center; color:var(--ink);
+  }
+  .lock-box p.raw-text{
+    margin:0 0 18px; font-size:14px; line-height:1.9; color:#415B72; text-align:left;
+    text-indent:2em; word-break:break-word;
+  }
+  .lock-box p.raw-text a{color:var(--blue); text-decoration:underline; word-break:break-all;}
+  .lock-box p.raw-note{
+    margin:0; text-align:center; font-size:13.5px; font-weight:800; color:var(--blue); line-height:1.7;
+  }
+  @media (max-width:520px){
+    .lock-box.raw-box{padding:46px 20px 22px;}
+    .lock-box p.raw-text{font-size:13px; line-height:1.85;}
+    .lock-box p.raw-note{font-size:12.5px;}
+  }
   .lock-icon{font-size:34px; line-height:1;}
   .lock-box h3{margin:12px 0 6px; font-size:19px;}
   .lock-box p{margin:0 0 18px; font-size:13px; color:#5B7A93;}
+  .lock-box p.support-tip{margin:-10px 0 18px; font-size:12px; color:#7A93A8;}
   .lock-box input{
     width:100%; padding:14px 16px; font-size:16px; text-align:center; letter-spacing:2px;
     border:1.5px solid var(--line); border-radius:12px; outline:none; transition:border-color .2s;
@@ -322,7 +351,7 @@
     .head-title{order:2;}
     #refreshBtn{order:3;}
     .head-extra{
-      order:4; flex:0 0 100%; justify-content:center; gap:10px; margin-top:2px;
+      order:4; flex:0 0 100%; justify-content:center; gap:10px; margin-top:2px; flex-wrap:wrap; row-gap:6px;
     }
     .head-extra .icon-btn{padding:0 11px; height:34px;}
     .head-extra .icon-btn span{display:inline; font-size:12px; letter-spacing:0;}
@@ -334,9 +363,9 @@
   @media (max-width:360px), (orientation:portrait) and (max-width:360px){
     .head-title .m{font-size:11px;}
     .head-row{gap:6px;}
-    .head-extra{gap:8px;}
-    .head-extra .icon-btn{padding:0 9px;}
-    .head-extra .icon-btn span{font-size:11px;}
+    .head-extra{gap:6px; row-gap:5px;}
+    .head-extra .icon-btn{padding:0 8px; height:32px;}
+    .head-extra .icon-btn span{font-size:10.5px;}
   }
 </style>
 </head>
@@ -398,6 +427,7 @@
     <div class="lock-icon">🛠</div>
     <h3>联系开发者</h3>
     <p>使用中遇到问题，可通过以下邮箱联系我们</p>
+    <p class="support-tip">移动端点击邮箱链接可快速唤起发送邮件页面</p>
     <div class="support-mail">
       <a id="supportMail" href="mailto:hcc0927@yeah.net">hcc0927@yeah.net</a>
       <button class="copy-btn" id="supportCopy" type="button">复制</button>
@@ -412,6 +442,15 @@
   </div>
 </div>
 
+<div class="mask" id="rawMask">
+  <div class="lock-box raw-box" id="rawBox">
+    <button class="raw-x" id="rawClose" title="关闭" aria-label="关闭">×</button>
+    <h3 class="raw-title">想要原图？</h3>
+    <p class="raw-text">由于网络条件限制、服务器限流等原因，部分体积较大的图片我们将进行压缩后上传（压缩完还是会尽量保持4K画质滴，不会对欣赏造成太大的影响），如果您看到照片文件名带有“compressed”字样，说明我们对该照片进行了压缩，您可以将图片保存到图库后放大看画质是否受到较大影响。若您确实想要未压缩的照片，您可以通过该网盘链接下载未压缩原图：<a href="https://pan.quark.cn/s/a96fb45f2b69?pwd=CtZu" target="_blank" rel="noopener">https://pan.quark.cn/s/a96fb45f2b69?pwd=CtZu</a></p>
+    <p class="raw-note">选择夸克网盘是由于其上传下载不限速，不存在商业合作等关系</p>
+  </div>
+</div>
+
 <section id="live" class="page">
   <div class="live-head">
     <div class="head-row">
@@ -423,6 +462,7 @@
             <div class="head-extra">
         <button class="icon-btn" id="autoBtn" title="自动更新（默认关闭，点击开启）">⚡<span> 自动更新</span></button>
         <button class="icon-btn" id="supportBtn" title="联系开发者">🛠<span> 联系开发者</span></button>
+        <button class="icon-btn" id="rawBtn" title="想要原图？">🖼️<span> 想要原图？</span></button>
       </div>
       <button class="icon-btn" id="refreshBtn" title="刷新（或按 R / F5）">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
@@ -1312,6 +1352,7 @@
   document.addEventListener("keydown", function (e) {
     if ($("lockMask").classList.contains("show") || $("lb").classList.contains("show") ||
         $("supportMask").classList.contains("show") ||
+        $("rawMask").classList.contains("show") ||
         $("declMask").classList.contains("show")) return;
     if (e.key === "r" || e.key === "R") { e.preventDefault(); refresh(true); }
   });
@@ -1327,6 +1368,17 @@
   });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && $("supportMask").classList.contains("show")) closeSupport();
+  });
+
+  function openRaw() { $("rawMask").classList.add("show"); }
+  function closeRaw() { $("rawMask").classList.remove("show"); }
+  $("rawBtn").addEventListener("click", openRaw);
+  $("rawClose").addEventListener("click", closeRaw);
+  $("rawMask").addEventListener("click", function (e) {
+    if (e.target === $("rawMask")) closeRaw();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $("rawMask").classList.contains("show")) closeRaw();
   });
 
   function copyText(text) {
