@@ -721,6 +721,7 @@
   }
 
   function normalize(arr, base) {
+    var seen = Object.create(null);
     return arr.map(function (p) {
       var url = p.url || p.download_url || ((base || "pic/") + encodeURIComponent(p.name));
       return {
@@ -733,7 +734,12 @@
         height: Number(p.height || 0),
         size: Number(p.size || 0)
       };
-    }).filter(function (p) { return CONFIG.ext.test(p.name); });
+    }).filter(function (p) { return CONFIG.ext.test(p.name); })
+      .filter(function (p) {
+        if (seen[p.key]) return false;
+        seen[p.key] = 1;
+        return true;
+      });
   }
 
   async function getJSON(url, headers) {
@@ -874,18 +880,25 @@
 
   async function giteeListDir(owner, repo, branch) {
     var all = [];
-    if (giteeHttpFailed) return all;                 
-    for (var page = 1; page <= 10; page++) {          
+    var seen = Object.create(null);
+    if (giteeHttpFailed) return all;
+    for (var page = 1; page <= 10; page++) {
       var url = GITEE + "/" + owner + "/" + repo + "/contents/pic" +
                 "?ref=" + encodeURIComponent(branch) +
                 "&page=" + page + "&per_page=100&t=" + Date.now();
       var data = await giteeGetJSON(url, GITEE_H);
-      if (data === null) { giteeHttpFailed = true; break; }   
+      if (data === null) { giteeHttpFailed = true; break; }
       if (!Array.isArray(data) || !data.length) {
         if (page === 1 && data) diagnose.push("Gitee API：master 分支的 pic/ 为空或不存在");
         break;
       }
-      all = all.concat(data);
+      var fresh = 0;
+      for (var k = 0; k < data.length; k++) {
+        var it = data[k];
+        var id = it.path || it.name || ("#" + page + ":" + k);
+        if (!seen[id]) { seen[id] = 1; all.push(it); fresh++; }
+      }
+      if (!fresh) break;
       if (data.length < 100) break;
     }
     if (all.length) return all;
@@ -981,12 +994,19 @@
 
   async function ghListDir(owner, repo, branch) {
     var all = [];
-    for (var page = 1; page <= 10; page++) {   
+    var seen = Object.create(null);
+    for (var page = 1; page <= 10; page++) {
       var url = "https://api.github.com/repos/" + owner + "/" + repo +
                 "/contents/pic?ref=" + branch + "&per_page=100&page=" + page + "&t=" + Date.now();
       var res = await getJSON(url, GH.headers);
       if (!res.ok || !Array.isArray(res.data) || !res.data.length) break;
-      all = all.concat(res.data);
+      var fresh = 0;
+      for (var k = 0; k < res.data.length; k++) {
+        var it = res.data[k];
+        var id = it.path || it.name || ("#" + page + ":" + k);
+        if (!seen[id]) { seen[id] = 1; all.push(it); fresh++; }
+      }
+      if (!fresh) break;
       if (res.data.length < 100) break;
     }
     return all;
